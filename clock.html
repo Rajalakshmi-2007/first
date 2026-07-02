@@ -1,171 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Modern Digital Clock</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Digital Clock</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-}
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #0f172a; /* Dark slate background */
+            color: #ffffff;
+        }
 
-body{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-    background:linear-gradient(-45deg,#0f172a,#1e293b,#312e81,#0f766e);
-    background-size:400% 400%;
-    animation:bgAnimation 12s ease infinite;
-    color:white;
-}
+        .clock-container {
+            background: rgba(30, 41, 59, 0.7);
+            padding: 2rem 3rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
 
-@keyframes bgAnimation{
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
-}
+        .clock {
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-variant-numeric: tabular-nums; /* Prevents numbers from shifting width */
+        }
 
-.clock-container{
-    width:420px;
-    padding:35px;
-    text-align:center;
-    border-radius:20px;
-    background:rgba(255,255,255,0.08);
-    backdrop-filter:blur(15px);
-    border:1px solid rgba(255,255,255,0.15);
-    box-shadow:0 15px 35px rgba(0,0,0,.4);
-    transition:.4s;
-}
-
-.clock-container:hover{
-    transform:translateY(-8px) scale(1.02);
-    box-shadow:0 20px 45px rgba(0,0,0,.5);
-}
-
-h2{
-    margin-bottom:20px;
-    color:#e2e8f0;
-    letter-spacing:1px;
-}
-
-#greeting{
-    font-size:1.3rem;
-    color:#facc15;
-    margin-bottom:15px;
-    font-weight:600;
-}
-
-.clock{
-    font-size:4rem;
-    font-weight:bold;
-    letter-spacing:3px;
-    background:linear-gradient(45deg,#38bdf8,#818cf8,#ec4899);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    text-shadow:0 0 15px rgba(56,189,248,.5);
-    font-variant-numeric:tabular-nums;
-}
-
-.date{
-    margin-top:15px;
-    color:#cbd5e1;
-    font-size:1.1rem;
-}
-
-.timezone{
-    margin-top:12px;
-    color:#94a3b8;
-    font-size:.95rem;
-}
-
-.footer{
-    margin-top:20px;
-    font-size:.9rem;
-    color:#94a3b8;
-}
-</style>
+        .date {
+            margin-top: 0.5rem;
+            font-size: 1.2rem;
+            color: #94a3b8;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="clock-container">
-
-    <h2>Digital Clock</h2>
-
-    <div id="greeting">Good Morning ☀️</div>
-
-    <div class="clock" id="clock">
-        00:00:00 AM
+    <div class="clock-container">
+        <div class="clock" id="clock">00:00:00 AM</div>
+        <div class="date" id="date">Loading Date...</div>
     </div>
 
-    <div class="date" id="date">
-        Loading...
-    </div>
+    <script>
+        function updateClock() {
+            const now = new Date();
+            
+         
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            
+            hours = hours % 12;
+            hours = hours ? hours : 12; // The hour '0' should be '12'
+            hours = String(hours).padStart(2, '0');
+            
+       
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
+            
+        
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date').textContent = now.toLocaleDateString('en-US', options);
+        }
 
-    <div class="timezone" id="timezone"></div>
-
-    <div class="footer">
-        ⏰ Live Time
-    </div>
-
-</div>
-
-<script>
-
-function updateClock(){
-
-    const now = new Date();
-
-    let hours = now.getHours();
-    const minutes = String(now.getMinutes()).padStart(2,'0');
-    const seconds = String(now.getSeconds()).padStart(2,'0');
-
-    const ampm = hours>=12 ? "PM" : "AM";
-
-    let greeting="";
-
-    if(hours<12)
-        greeting="Good Morning ☀️";
-    else if(hours<17)
-        greeting="Good Afternoon 🌤️";
-    else if(hours<20)
-        greeting="Good Evening 🌇";
-    else
-        greeting="Good Night 🌙";
-
-    document.getElementById("greeting").textContent=greeting;
-
-    hours = hours%12;
-    hours = hours ? hours : 12;
-    hours = String(hours).padStart(2,'0');
-
-    document.getElementById("clock").textContent=
-    `${hours}:${minutes}:${seconds} ${ampm}`;
-
-    const options={
-        weekday:'long',
-        year:'numeric',
-        month:'long',
-        day:'numeric'
-    };
-
-    document.getElementById("date").textContent=
-    now.toLocaleDateString("en-US",options);
-
-    document.getElementById("timezone").textContent=
-    Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-}
-
-updateClock();
-setInterval(updateClock,1000);
-
-</script>
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
 
 </body>
-</html>
+</html>      
